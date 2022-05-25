@@ -1,0 +1,14 @@
+{
+    "scripts": {
+        "start": "node serve.js",
+        "clean": "rm -rf dist",
+        "build": "node build.js"
+    },
+    "dependencies": {
+        "@types/gl-matrix": "^3.2.0",
+        "esbuild": "^0.13.14",
+        "esbuild-dev-server": "^0.3.0",
+        "esbuild-plugin-glsl": "^1.0.5",
+        "gl-matrix": "^3.4.3"
+    }
+}

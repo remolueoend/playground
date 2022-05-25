@@ -1,0 +1,11 @@
+{
+  "name": "smartie",
+  "packageManager": "yarn@3.1.1",
+  "dependencies": {
+    "truffle": "^5.4.27"
+  },
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "remolueoend <remolueoend@users.noreply.github.com>",
+  "license": "MIT"
+}

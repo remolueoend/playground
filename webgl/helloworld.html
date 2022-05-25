@@ -1,0 +1,107 @@
+<html>
+
+<body>
+	<canvas></canvas>
+</body>
+<script>
+	//@ts-check
+
+	const [gl, program] = initGl(
+		getShaderSource("vertex"),
+		getShaderSource("fragment")
+	)
+	
+	function drawTriangle(gl, program) {
+		
+	}
+	
+	/**
+	 * @param type {"vertex" | "fragment"}
+	 * @returns {string}
+	 */
+	function getShaderSource(type) {
+		return document.querySelector(`script[data-shader=${type}]`).textContent
+	}
+
+	/**
+	 * @param vertexShaderSource {string}
+	 * @param fragmentShaderSource {string}
+	 * @returns {[WebGLRenderingContext, WebGLProgram]}
+	 */
+	function initGl(vertexShaderSource, fragmentShaderSource) {
+		const canvas = document.querySelector("canvas")
+		const gl = canvas.getContext("webgl")
+
+		const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource)
+		const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource)
+
+		const program = createProgram(gl, vertexShader, fragmentShader)
+
+		const positionAttributeLocation = gl.getAttribLocation(program, "a_position")
+		const positionBuffer = gl.createBuffer()
+		gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
+		const positions = [
+			0, 0,
+			0, 0.5,
+			0.7, 0
+		]
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW)
+		
+		return [gl, program]
+	}
+
+	/**
+	 * @param gl {WebGLRenderingContext}
+	 * @params type {number}
+	 * @params source {string}
+	 * @returns {WebGLShader}
+	 */
+	function createShader(gl, type, source) {
+		var shader = gl.createShader(type)
+		gl.shaderSource(shader, source)
+		gl.compileShader(shader)
+		const success = gl.getShaderParameter(shader, gl.COMPILE_STATUS)
+		if (success) {
+			return shader
+		}
+
+		console.error(gl.getShaderInfoLog(shader))
+		gl.deleteShader(shader)
+	}
+
+	/**
+	 * @param gl {WebGLRenderingContext}
+	 * @param vertexShader {WebGLShader}
+	 * @param fragmentShader {WebGLShader}
+	 */
+	function createProgram(gl, vertexShader, fragmentShader) {
+		const program = gl.createProgram()
+		gl.attachShader(program, vertexShader)
+		gl.attachShader(program, fragmentShader)
+		gl.linkProgram(program)
+		const success = gl.getProgramParameter(program, gl.LINK_STATUS)
+		if (success) {
+			return program
+		}
+
+		console.error(gl.getProgramInfoLog(program))
+		gl.deleteProgram(program)
+	}
+
+</script>
+<script type="text/glsl" data-shader="vertex">
+	attribute vec4 a_position;
+	
+	void main() {
+		gl_Position = a_position;
+	}
+</script>
+<script type="text/glsl" data-shader="fragment">
+	precision mediump float;
+	
+	void main() {
+		gl_FragColor= vec4(1, 0, 0.5, 1);
+	}
+</script>
+
+</html>
